@@ -25,6 +25,10 @@
 
         #compra_actual {}
 
+        #vendido-actual {
+            font-size: 2em;
+        }
+
         #historial {}
 
         #formulario-producto {
@@ -124,6 +128,13 @@
             font-weight: bold;
         }
 
+        hr {
+            height: 2px;
+            background-color: #d0c7c7;
+            border: none;
+        }
+
+
         .copyright {
             text-align: right;
             color: rgb(104, 104, 104);
@@ -168,12 +179,15 @@
             </form>
 
         </div>
+        <br>
+        <br>
         <div id="compra_actual">
             <div id="vendido-actual">Compra actual: $0.00</div>
+            <br>
             <button id="finalizar-compra">Finalizar Compra</button>
         </div>
 
-
+        <hr>
         <div id="historial">
             <h2>Historial de ventas</h2>
             <button id="exportar-xlsx">Exportar a Excel</button>
