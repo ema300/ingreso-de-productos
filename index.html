@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ingresar producto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0% 6em 0em 6em;
+            background-color: #e6e6e6;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .contenido {
+            margin: 0em 0em 0em 0em;
+            padding: 0em 0em 0em 0em;
+
+        }
+
+        #ingresar_producto {}
+
+        #compra_actual {}
+
+        #historial {}
+
+        #formulario-producto {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #262726;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        table {
+            max-width: 100%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #e9e5e5;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        button#exportar-xlsx,
+        button#vaciar-localstorage,
+        button#sort-button {
+            float: right;
+            margin: 1em 1em 1em 1em;
+        }
+
+        /* Estilo para el botón "Exportar a Excel" */
+        #exportar-xlsx {
+            background-color: #02861f;
+            color: #fff;
+        }
+
+        /* Estilo para el botón "Vaciar productos" */
+        #vaciar-localstorage {
+            background-color: #222222;
+            color: #fff;
+        }
+
+        /* Estilo para el botón "Alternar Orden" */
+        #sort-button {
+            background-color: #0fc1e0;
+            color: #fff;
+        }
+
+        /* Estilo para el botón "Buscar" */
+        #search-button {
+            background-color: #0fc1e0;
+            color: #fff;
+        }
+
+        /* Estilo para el botón "Mostrar Todos" */
+        #show-all-button {
+            background-color: #0fc1e0;
+            color: #fff;
+        }
+
+        #guardar {
+            background-color: #0fc1e0;
+            color: #fff;
+        }
+
+        h2 {
+            float: left;
+        }
+
+        /* Estilo para el elemento que muestra el total de precios */
+        #total-precio {
+            margin: 20px;
+            font-weight: bold;
+        }
+
+        .copyright {
+            text-align: right;
+            color: rgb(104, 104, 104);
+            margin: 1rem;
+            padding: 1rem;
+            font-size: 0em;
+        }
+
+        @media (max-width: 768px) {
+            #formulario-producto {
+                max-width: 100%;
+                margin: 0;
+                border-radius: 0;
+                text-align: right;
+            }
+
+            table {
+                max-width: 100%;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contenido">
+
+        <div id="ingresar_producto">
+            <h1>Ingresar Productos</h1>
+
+            <form id="formulario-producto">
+                <label for="nombre">Nombre del Producto:</label>
+                <input type="text" id="nombre" required><br>
+
+                <label for="precio">Precio:</label>
+                <input type="number" id="precio" required><br>
+
+                <label for="cantidad">Cantidad:</label>
+                <input type="number" id="cantidad" required><br>
+
+                <button type="button" id="guardar">Ingresar Producto</button>
+            </form>
+
+        </div>
+        <div id="compra_actual">
+            <div id="vendido-actual">Compra actual: $0.00</div>
+            <button id="finalizar-compra">Finalizar Compra</button>
+        </div>
+
+
+        <div id="historial">
+            <h2>Historial de ventas</h2>
+            <button id="exportar-xlsx">Exportar a Excel</button>
+            <button id="vaciar-localstorage">Vaciar productos</button>
+            <button id="sort-button">Alternar Orden</button>
+
+            <input type="text" id="search-input" placeholder="Buscar por Nombre, Fecha, Hora o Precio">
+            <button id="search-button">Buscar</button>
+            <button id="show-all-button">Mostrar Todos</button>
+            <!-- Elemento para mostrar la suma de precios -->
+            <div id="total-precio">Total: $0.00</div>
+
+
+
+
+            <table id="tabla-productos">
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Acciones</th>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+
+    <div class="copyright">
+        © 2023 Desarrollado por DEA. Derechos reservados.
+
+    </div>
+    <!-- Incluye la biblioteca xlsx-style -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
+    <script>
+        var productos = [];
+        var vendido = 0;
+
+        localStorage.setItem('finalizo_compra', 'si');
+        // Obtén el valor almacenado en localStorage
+        var compra_actual = localStorage.getItem('finalizo_compra');
+
+        localStorage.setItem('valor_compra_actual', '0');
+        var valor_compra_actual = localStorage.getItem('valor_compra_actual');
+        // Cargar datos de productos desde el almacenamiento local al cargar la página
+        window.addEventListener('load', function () {
+            if (localStorage.getItem('productos')) {
+                productos = JSON.parse(localStorage.getItem('productos'));
+                displayProductsInTable();
+                actualizarTotalPrecio(); // Actualizar el total de precios
+                actualizarCompraActual();
+            }
+        });
+
+        function displayProductsInTable(productsToDisplay = productos) {
+            var tabla = document.getElementById('tabla-productos');
+            tabla.innerHTML = ""; // Limpiar el contenido existente de la tabla
+            var headerRow = tabla.insertRow();
+            for (var key in productsToDisplay[0]) {
+                var headerCell = headerRow.insertCell();
+                headerCell.innerHTML = key;
+            }
+
+            productsToDisplay.forEach(function (product, index) {
+                var row = tabla.insertRow();
+                for (var key in product) {
+                    var cell = row.insertCell();
+                    cell.innerHTML = product[key];
+                }
+
+                // Agregar un botón de eliminar a cada fila
+                var deleteCell = row.insertCell();
+                var deleteButton = document.createElement('button');
+                deleteButton.innerHTML = 'Eliminar';
+                deleteButton.addEventListener('click', function () {
+                    eliminarProducto(index);
+                });
+                deleteCell.appendChild(deleteButton);
+            });
+        }
+
+        function obtenerFechaYHoraActuales() {
+            var now = new Date();
+            var fecha = now.toISOString().slice(0, 10);
+            var hora = now.toTimeString().slice(0, 8);
+            return { fecha, hora };
+        }
+
+        function calcularTotal() {
+            var precio = parseFloat(document.getElementById('precio').value);
+            var cantidad = parseFloat(document.getElementById('cantidad').value);
+            var total = precio * cantidad;
+            document.getElementById('total').value = total.toFixed(2);
+        }
+
+        function eliminarProducto(index) {
+            if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+                productos.splice(index, 1);
+                localStorage.setItem('productos', JSON.stringify(productos));
+                displayProductsInTable();
+                actualizarTotalPrecio(); // Actualizar el total de precios después de eliminar
+                actualizarCompraActual();
+            }
+        }
+
+        document.getElementById('guardar').addEventListener('click', function () {
+            var nombre = document.getElementById('nombre').value;
+            var precio = parseFloat(document.getElementById('precio').value);
+            var cantidad = parseFloat(document.getElementById('cantidad').value);
+
+            if (compra_actual === 'si') {
+                // Si la compra está finalizada, reinicia el valor de "Vendido Actual" a cero
+                vendido = 0;
+                actualizarCompraActual();
+            }
+
+
+            if (nombre.trim() === '' || isNaN(precio) || isNaN(cantidad) || precio < 0 || cantidad < 0) {
+                // Mostrar un mensaje de error o realizar alguna acción si los campos están vacíos, no son válidos o son negativos
+                alert('Por favor, complete todos los campos correctamente y asegúrese de que el precio y la cantidad no sean negativos.');
+                return; // Detener la función si los campos no son válidos
+            }
+
+            var { fecha, hora } = obtenerFechaYHoraActuales();
+
+            var total = (precio * cantidad).toFixed(2);
+
+            productos.push({
+                "Producto": nombre,
+                "Precio": precio,
+                "Cantidad": cantidad,
+                "Total": total,
+                "Fecha": fecha,
+                "Hora": hora
+            });
+
+            localStorage.setItem('productos', JSON.stringify(productos));
+            displayProductsInTable();
+
+            localStorage.setItem('finalizo_compra', 'no');
+            // Obtén el valor almacenado en localStorage
+            compra_actual = localStorage.getItem('finalizo_compra');
+
+
+            document.getElementById('nombre').value = "";
+            document.getElementById('precio').value = "";
+            document.getElementById('cantidad').value = "";
+
+            actualizarTotalPrecio(); // Actualizar el total de precios después de agregar un producto
+            actualizarCompraActual();
+        });
+
+        document.getElementById('exportar-xlsx').addEventListener('click', function () {
+            var wb = XLSX.utils.book_new();
+            var ws = XLSX.utils.json_to_sheet(productos);
+            XLSX.utils.book_append_sheet(wb, ws, 'Productos');
+
+            var now = new Date();
+            var datePart = now.toISOString().slice(0, 10).replace(/-/g, '-');
+            var timePart = now.toTimeString().slice(0, 8).replace(/:/g, '-');
+            var fileName = 'productos_' + datePart + '_' + timePart + '.xlsx';
+
+            XLSX.writeFile(wb, fileName);
+        });
+
+        document.getElementById('vaciar-localstorage').addEventListener('click', function () {
+            var confirmacion = confirm('¿Estás seguro de que deseas vaciar los datos almacenados en el almacenamiento local?');
+            if (confirmacion) {
+                localStorage.removeItem('productos');
+                localStorage.removeItem('valor_compra_actual');
+                productos = [];
+                displayProductsInTable();
+                actualizarTotalPrecio(); // Actualizar el total de precios después de vaciar los productos
+                actualizarCompraActual();
+            }
+        });
+
+        //remover compra actual
+
+        document.getElementById('finalizar-compra').addEventListener('click', function () {
+            var confirmacion = confirm('¿Estás seguro de que deseas finalizar la compra?');
+            if (confirmacion) {
+                localStorage.setItem('finalizo_compra', 'si');
+
+                // Obtén el valor almacenado en localStorage
+                compra_actual = localStorage.getItem('finalizo_compra');
+                valor_compra_actual = localStorage.setItem('valor_compra_actual', '0');
+                console.log(compra_actual);
+                actualizarCompraActual();
+            }
+        });
+
+        //
+        document.getElementById('precio').addEventListener('input', calcularTotal);
+        document.getElementById('cantidad').addEventListener('input', calcularTotal);
+
+        var sortDirection = 'asc';
+
+        function toggleSortDirection() {
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+        }
+
+        function sortProducts() {
+            productos.sort(function (a, b) {
+                if (sortDirection === 'asc') {
+                    return a.Producto.localeCompare(b.Producto);
+                } else {
+                    return b.Producto.localeCompare(a.Producto);
+                }
+            });
+
+            displayProductsInTable();
+        }
+
+        document.getElementById('sort-button').addEventListener('click', function () {
+            toggleSortDirection();
+            sortProducts();
+        });
+
+        document.getElementById('search-button').addEventListener('click', function () {
+            var searchInput = document.getElementById('search-input').value.toLowerCase();
+            var filteredProducts = productos.filter(function (product) {
+                return (
+                    product.Producto.toLowerCase().includes(searchInput) ||
+                    product.Fecha.includes(searchInput) ||
+                    product.Hora.includes(searchInput) ||
+                    product.Precio.toString().includes(searchInput)
+                );
+            });
+
+            displayProductsInTable(filteredProducts);
+        });
+
+        document.getElementById('show-all-button').addEventListener('click', function () {
+            displayProductsInTable();
+        });
+
+        function actualizarTotalPrecio() {
+            var total = productos.reduce(function (acumulador, producto) {
+                return acumulador + parseFloat(producto.Total);
+            }, 0);
+
+            var totalPrecioElement = document.getElementById('total-precio');
+            totalPrecioElement.textContent = 'Total: $' + total.toFixed(2);
+
+        }
+
+        function actualizarCompraActual() {
+
+            // Compara el valor almacenado con el valor de referencia
+            if (compra_actual === 'no') {
+                // Si son iguales, haz algo si es verdadero
+                console.log('No finalizo');
+                // Realiza aquí las acciones que desees en caso de que la comparación sea verdadera.
+                vendido = productos.reduce(function (acumulador, producto) {
+                    return acumulador + parseFloat(producto.Total);
+                }, 0);
+                localStorage.setItem('valor_compra_actual', vendido);
+                // Obtén el valor almacenado en localStorage
+
+                vendido = localStorage.getItem('valor_compra_actual');
+
+                var vendidoActualElement = document.getElementById('vendido-actual');
+                vendidoActualElement.textContent = 'Compra actual: $' + vendido;
+
+            } else {
+                // Si no son iguales, haz algo si es falso
+                console.log('si finalizo');
+                // Realiza aquí las acciones que desees en caso de que la comparación sea falsa.
+                vendido = 0;
+
+
+                var vendidoActualElement = document.getElementById('vendido-actual');
+                vendidoActualElement.textContent = 'Compra actual: $' + vendido.toFixed(2);
+                vendido = localStorage.setItem('valor_compra_actual', '0');
+
+            }
+
+        }
+
+
+
+    </script>
+</body>
+
+</html>
