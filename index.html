@@ -227,15 +227,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
     <script>
         var productos = [];
-        var vendido = 0;
+        var vendido = 0.00;
+        var acum=0;
 
-        localStorage.setItem('finalizo_compra', 'si');
+        localStorage.setItem('finalizo_compra', 'no');
         // Obtén el valor almacenado en localStorage
         var compra_actual = localStorage.getItem('finalizo_compra');
 
-        localStorage.setItem('valor_compra_actual', '0');
-        var valor_compra_actual = localStorage.getItem('valor_compra_actual');
-        // Cargar datos de productos desde el almacenamiento local al cargar la página
         window.addEventListener('load', function () {
             if (localStorage.getItem('productos')) {
                 productos = JSON.parse(localStorage.getItem('productos'));
@@ -297,15 +295,15 @@
         }
 
         document.getElementById('guardar').addEventListener('click', function () {
+        
             var nombre = document.getElementById('nombre').value;
             var precio = parseFloat(document.getElementById('precio').value);
             var cantidad = parseFloat(document.getElementById('cantidad').value);
 
-            if (compra_actual === 'si') {
-                // Si la compra está finalizada, reinicia el valor de "Vendido Actual" a cero
-                vendido = 0;
-                actualizarCompraActual();
-            }
+            localStorage.setItem('finalizo_compra', 'no');
+            // Obtén el valor almacenado en localStorage
+            compra_actual = localStorage.getItem('finalizo_compra');
+
 
 
             if (nombre.trim() === '' || isNaN(precio) || isNaN(cantidad) || precio < 0 || cantidad < 0) {
@@ -317,6 +315,10 @@
             var { fecha, hora } = obtenerFechaYHoraActuales();
 
             var total = (precio * cantidad).toFixed(2);
+            vendido = total;
+            localStorage.setItem('valor_compra_actual', vendido);
+                // Obtén el valor almacenado en localStorage
+            console.log('guardar'+ vendido)
 
             productos.push({
                 "Producto": nombre,
@@ -330,9 +332,7 @@
             localStorage.setItem('productos', JSON.stringify(productos));
             displayProductsInTable();
 
-            localStorage.setItem('finalizo_compra', 'no');
-            // Obtén el valor almacenado en localStorage
-            compra_actual = localStorage.getItem('finalizo_compra');
+          
 
 
             document.getElementById('nombre').value = "";
@@ -359,8 +359,7 @@
         document.getElementById('vaciar-localstorage').addEventListener('click', function () {
             var confirmacion = confirm('¿Estás seguro de que deseas vaciar los datos almacenados en el almacenamiento local?');
             if (confirmacion) {
-                localStorage.removeItem('productos');
-                localStorage.removeItem('valor_compra_actual');
+                localStorage.removeItem('productos');    
                 productos = [];
                 displayProductsInTable();
                 actualizarTotalPrecio(); // Actualizar el total de precios después de vaciar los productos
@@ -377,8 +376,12 @@
 
                 // Obtén el valor almacenado en localStorage
                 compra_actual = localStorage.getItem('finalizo_compra');
-                valor_compra_actual = localStorage.setItem('valor_compra_actual', '0');
+                vendido= localStorage.setItem('valor_compra_actual', '0.00');
+                localStorage.removeItem('valor_compra_actual');
+                vendido=0
                 console.log(compra_actual);
+                console.log(vendido);
+                acum=0;
                 actualizarCompraActual();
             }
         });
@@ -445,26 +448,26 @@
                 // Si son iguales, haz algo si es verdadero
                 console.log('No finalizo');
                 // Realiza aquí las acciones que desees en caso de que la comparación sea verdadera.
-                vendido = productos.reduce(function (acumulador, producto) {
-                    return acumulador + parseFloat(producto.Total);
-                }, 0);
-                localStorage.setItem('valor_compra_actual', vendido);
-                // Obtén el valor almacenado en localStorage
+                
+               
 
                 vendido = localStorage.getItem('valor_compra_actual');
-
+                console.log(vendido)
+                acum= parseFloat(acum) + parseFloat(vendido);
+                localStorage.setItem('valor_compra_actual', JSON.stringify(acum));
+                console.log(acum)
                 var vendidoActualElement = document.getElementById('vendido-actual');
-                vendidoActualElement.textContent = 'Compra actual: $' + vendido;
+                vendidoActualElement.textContent = 'Compra actual: $' + acum;
+                
 
             } else {
                 // Si no son iguales, haz algo si es falso
-                console.log('si finalizo');
+                console.log('si finalizo')
                 // Realiza aquí las acciones que desees en caso de que la comparación sea falsa.
                 vendido = 0;
-
-
                 var vendidoActualElement = document.getElementById('vendido-actual');
                 vendidoActualElement.textContent = 'Compra actual: $' + vendido.toFixed(2);
+                console.log(vendido);
                 vendido = localStorage.setItem('valor_compra_actual', '0');
 
             }
