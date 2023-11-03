@@ -1,0 +1,144 @@
+@charset "UTF-8";
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0% 6em 0em 6em;
+  background-color: #e6e6e6;
+}
+
+h1 {
+  text-align: center;
+}
+
+.contenido {
+  margin: 0em 0em 0em 0em;
+  padding: 0em 0em 0em 0em;
+}
+
+#vendido-actual {
+  font-size: 2em;
+}
+
+#formulario-producto {
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}
+
+input[type=text],
+input[type=number] {
+  width: 95%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  background-color: #262726;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+table {
+  max-width: 100%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  background-color: #e9e5e5;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ccc;
+}
+
+button#exportar-xlsx,
+button#vaciar-localstorage,
+button#sort-button {
+  float: right;
+  margin: 1em 1em 1em 1em;
+}
+
+/* Estilo para el botón "Exportar a Excel" */
+#exportar-xlsx {
+  background-color: #02861f;
+  color: #fff;
+}
+
+/* Estilo para el botón "Vaciar productos" */
+#vaciar-localstorage {
+  background-color: #222222;
+  color: #fff;
+}
+
+/* Estilo para el botón "Alternar Orden" */
+#sort-button {
+  background-color: #0fc1e0;
+  color: #fff;
+}
+
+/* Estilo para el botón "Buscar" */
+#search-button {
+  background-color: #0fc1e0;
+  color: #fff;
+}
+
+/* Estilo para el botón "Mostrar Todos" */
+#show-all-button {
+  background-color: #0fc1e0;
+  color: #fff;
+}
+
+#guardar {
+  background-color: #0fc1e0;
+  color: #fff;
+}
+
+h2 {
+  float: left;
+}
+
+/* Estilo para el elemento que muestra el total de precios */
+#total-precio {
+  margin: 20px;
+  font-weight: bold;
+}
+
+hr {
+  height: 2px;
+  background-color: #d0c7c7;
+  border: none;
+}
+
+.copyright {
+  text-align: right;
+  color: rgb(104, 104, 104);
+  margin: 1rem;
+  padding: 1rem;
+  font-size: 0em;
+}
+
+@media (max-width: 768px) {
+  #formulario-producto {
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+    text-align: right;
+  }
+  table {
+    max-width: 100%;
+    margin: 0;
+  }
+}/*# sourceMappingURL=estilos.css.map */
