@@ -219,3 +219,5 @@ function actualizarCompraActual() {
         vendido = localStorage.setItem('valor_compra_actual', '0');
     }
 }
+
+
