@@ -164,7 +164,7 @@ hr {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0% 0em 0em 0em;
-        background-color: $color6;
+        background-color: $color0;
         color: $color2;
         
         
@@ -176,27 +176,30 @@ hr {
     
     .contenido {
         display: flex;
-        margin: 0em 0% 0em 0%;
-        padding: 1em 1em 1em 1.5em;
+        margin: 0em 0em 0em 0em;
+        padding: 0em 0em 0em 0em;
         justify-content: center;
         flex-wrap: wrap;
-        background-color: $color7;
+        background-color: $color0;
     }
     
     #ingresar_producto {
-        margin: 0em 0em 3em 0em;
+        margin: 0em 0em 0em 0em;
         background-color: $color0;
-        padding: 0em 2em 1em 2em;    border-radius: 8px;
+        padding: 0em 0em 0em 0em;    border-radius: 8px;
     }
     
     #compra_actual {
         width: 100%;
-        margin: -2em 0em 0em 0em;
+        margin: 0em 0em 0em 0em;
         background-color: $color0;
-        padding: 20px 20px 20px 20px;
+        padding: 1em 0em 1em 1em;
         border-radius: 8px;
     }
-    
+    .busqueda{
+        margin: 0em 0em 0em 0em;
+        padding: 1em 0em 1em 1em;
+    }
     #vendido-actual {
         font-size: 2em;
     }
@@ -204,10 +207,10 @@ hr {
     #historial {
        
     background-color: $color0;
-    width: 90%;
+    
     display: flex;
     margin: 0em 0em 0em 0em;
-    padding: 0em 0em 0em -1em;
+    padding: 0em 0em 0em 0em;
     border-radius: 8px;
     flex-wrap: wrap;
     justify-content: space-evenly;
@@ -249,8 +252,8 @@ hr {
     
     table {
         display: none;
-        margin: -2em 2em 2em 2em;
-        padding: 2em 2em 2em 2em;
+        margin: 0em 0em 0em 0em;
+        padding: 0em 0em 0em 0em;
         border-collapse: collapse;
         display: flex;
         justify-content: space-around;
@@ -322,7 +325,7 @@ hr {
     
     .copyright {
         text-align: right;
-        color: $color5;
+        color: $color2;
         margin: 1rem;
         padding: 1rem;
         font-size: 1em;

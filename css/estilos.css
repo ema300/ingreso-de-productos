@@ -157,7 +157,7 @@ hr {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0% 0em 0em 0em;
-    background-color: #073260;
+    background-color: rgb(226, 226, 226);
     color: rgb(66, 66, 66);
   }
   h1 {
@@ -165,34 +165,37 @@ hr {
   }
   .contenido {
     display: flex;
-    margin: 0em 0% 0em 0%;
-    padding: 1em 1em 1em 1.5em;
+    margin: 0em 0em 0em 0em;
+    padding: 0em 0em 0em 0em;
     justify-content: center;
     flex-wrap: wrap;
-    background-color: #091725;
+    background-color: rgb(226, 226, 226);
   }
   #ingresar_producto {
-    margin: 0em 0em 3em 0em;
+    margin: 0em 0em 0em 0em;
     background-color: rgb(226, 226, 226);
-    padding: 0em 2em 1em 2em;
+    padding: 0em 0em 0em 0em;
     border-radius: 8px;
   }
   #compra_actual {
     width: 100%;
-    margin: -2em 0em 0em 0em;
+    margin: 0em 0em 0em 0em;
     background-color: rgb(226, 226, 226);
-    padding: 20px 20px 20px 20px;
+    padding: 1em 0em 1em 1em;
     border-radius: 8px;
+  }
+  .busqueda {
+    margin: 0em 0em 0em 0em;
+    padding: 1em 0em 1em 1em;
   }
   #vendido-actual {
     font-size: 2em;
   }
   #historial {
     background-color: rgb(226, 226, 226);
-    width: 90%;
     display: flex;
     margin: 0em 0em 0em 0em;
-    padding: 0em 0em 0em -1em;
+    padding: 0em 0em 0em 0em;
     border-radius: 8px;
     flex-wrap: wrap;
     justify-content: space-evenly;
@@ -224,8 +227,8 @@ hr {
   }
   table {
     display: none;
-    margin: -2em 2em 2em 2em;
-    padding: 2em 2em 2em 2em;
+    margin: 0em 0em 0em 0em;
+    padding: 0em 0em 0em 0em;
     border-collapse: collapse;
     display: flex;
     justify-content: space-around;
@@ -281,7 +284,7 @@ hr {
   }
   .copyright {
     text-align: right;
-    color: #ccc;
+    color: rgb(66, 66, 66);
     margin: 1rem;
     padding: 1rem;
     font-size: 1em;
