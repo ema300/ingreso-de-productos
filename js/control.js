@@ -1,7 +1,7 @@
 var productos = [];
 var vendido = 0.00;
 var acum = 0;
-
+var carrito = [];
 
 
 localStorage.setItem('finalizo_compra', 'no');
@@ -13,6 +13,8 @@ var compra_actual = localStorage.getItem('finalizo_compra');
 window.addEventListener('load', function () {
     if (localStorage.getItem('productos')) {
         productos = JSON.parse(localStorage.getItem('productos'));
+        carrito = JSON.parse(localStorage.getItem('carrito'));
+
         displayProductsInTable();
         actualizarTotalPrecio(); // Actualizar el total de precios
         actualizarCompraActual();
@@ -64,27 +66,55 @@ function calcularTotal() {
 
 function eliminarProducto(index) {
     if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
-
-        console.log(productos[index].Precio)
-        if (compra_actual === 'no') {
+        if (compra_actual === 'no' && carrito[index].Total=== productos[index].Total) {
             vendido = localStorage.getItem('valor_compra_actual');
-            acum = parseFloat(vendido)- productos[index].Precio;
+
+            acum = Math.max(parseFloat(vendido), carrito[index].Total ) - Math.min(parseFloat(vendido), carrito[index].Total );
             localStorage.setItem('valor_compra_actual', JSON.stringify(acum));
             var vendidoActualElement = document.getElementById('vendido-actual');
             vendidoActualElement.textContent = 'Compra actual: $' + acum;
 
+
+            carrito.splice(index, 1);
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+
+
             productos.splice(index, 1);
             localStorage.setItem('productos', JSON.stringify(productos));
+            displayProductsInTable();
+
     
+        }
+        console.log(productos.length)
+        if (productos.length===0) {
+            localStorage.removeItem('productos');
+            localStorage.removeItem('carrito');
+            productos = [];
+            Carrito = [];
+            localStorage.removeItem('Ident');
+    
+            localStorage.setItem('finalizo_compra', 'si');
+            compra_actual = localStorage.getItem('finalizo_compra');
+            vendido = localStorage.setItem('valor_compra_actual', '0.00');
+            localStorage.removeItem('valor_compra_actual');
+            vendido = 0;
+    
+            acum = 0;
+    
+            displayProductsInTable();
+            actualizarTotalPrecio();
+            actualizarCompraActual();
         }
         else{
             productos.splice(index, 1);
             localStorage.setItem('productos', JSON.stringify(productos));
-            actualizarCompraActual();
+
+            displayProductsInTable();
+            actualizarTotalPrecio(); // Actualizar el total de precios después de eliminar
+            
         }
         
-        displayProductsInTable();
-        actualizarTotalPrecio(); // Actualizar el total de precios después de eliminar
+       
         
     }
 }
@@ -130,7 +160,11 @@ document.getElementById('guardar').addEventListener('click', function () {
         "Hora": hora
     });
 
+    
+    carrito = productos.slice();
+
     localStorage.setItem('productos', JSON.stringify(productos));
+    localStorage.setItem('carrito', JSON.stringify(carrito));
     displayProductsInTable();
 
     document.getElementById('nombre').value = "";
@@ -158,7 +192,9 @@ document.getElementById('vaciar-localstorage').addEventListener('click', functio
     var confirmacion = confirm('¿Estás seguro de que deseas vaciar los datos almacenados en el almacenamiento local?');
     if (confirmacion) {
         localStorage.removeItem('productos');
+        localStorage.removeItem('carrito');
         productos = [];
+        Carrito = [];
         localStorage.removeItem('Ident');
 
         localStorage.setItem('finalizo_compra', 'si');
@@ -185,7 +221,7 @@ function finalizar_compra() {
         vendido = localStorage.setItem('valor_compra_actual', '0.00');
         localStorage.removeItem('valor_compra_actual');
         vendido = 0;
-
+        carrito =[];
         acum = 0;
         actualizarCompraActual();
     }
