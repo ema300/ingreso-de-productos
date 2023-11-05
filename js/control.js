@@ -64,11 +64,28 @@ function calcularTotal() {
 
 function eliminarProducto(index) {
     if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
-        productos.splice(index, 1);
-        localStorage.setItem('productos', JSON.stringify(productos));
+
+        console.log(productos[index].Precio)
+        if (compra_actual === 'no') {
+            vendido = localStorage.getItem('valor_compra_actual');
+            acum = parseFloat(vendido)- productos[index].Precio;
+            localStorage.setItem('valor_compra_actual', JSON.stringify(acum));
+            var vendidoActualElement = document.getElementById('vendido-actual');
+            vendidoActualElement.textContent = 'Compra actual: $' + acum;
+
+            productos.splice(index, 1);
+            localStorage.setItem('productos', JSON.stringify(productos));
+    
+        }
+        else{
+            productos.splice(index, 1);
+            localStorage.setItem('productos', JSON.stringify(productos));
+            actualizarCompraActual();
+        }
+        
         displayProductsInTable();
         actualizarTotalPrecio(); // Actualizar el total de precios después de eliminar
-        actualizarCompraActual();
+        
     }
 }
 document.getElementById('guardar').addEventListener('click', function () {
@@ -76,21 +93,20 @@ document.getElementById('guardar').addEventListener('click', function () {
     var precio = parseFloat(document.getElementById('precio').value);
     var cantidad = parseFloat(document.getElementById('cantidad').value);
     actualizarTotalPrecio();
-   
+
     localStorage.setItem('finalizo_compra', 'no');
     // Obtén el valor almacenado en localStorage
     compra_actual = localStorage.getItem('finalizo_compra');
     //para el ID
- if (localStorage.getItem('Ident')===null) {
-    localStorage.setItem('Ident', '0');
- }
-var id_anterior=localStorage.getItem('Ident');
-  
-// Obtén el valor almacenado en localStorage
-var id =  parseInt(id_anterior) + 1;
-console.log('rr'+ id)
+    if (localStorage.getItem('Ident') === null) {
+        localStorage.setItem('Ident', '0');
+    }
+    var id_anterior = localStorage.getItem('Ident');
 
-localStorage.setItem('Ident', id.toString());
+    // Obtén el valor almacenado en localStorage
+    var id = parseInt(id_anterior) + 1;
+
+    localStorage.setItem('Ident', id.toString());
 
     if (nombre.trim() === '' || isNaN(precio) || isNaN(cantidad) || precio < 0 || cantidad < 0) {
         alert('Por favor, complete todos los campos correctamente y asegúrese de que el precio y la cantidad no sean negativos.');
@@ -103,8 +119,7 @@ localStorage.setItem('Ident', id.toString());
     vendido = total;
     localStorage.setItem('valor_compra_actual', vendido);
     // Obtén el valor almacenado en localStorage
-    console.log('guardar' + vendido);
-    
+
     productos.push({
         "ID": id,
         "Producto": nombre,
@@ -151,8 +166,7 @@ document.getElementById('vaciar-localstorage').addEventListener('click', functio
         vendido = localStorage.setItem('valor_compra_actual', '0.00');
         localStorage.removeItem('valor_compra_actual');
         vendido = 0;
-        console.log(compra_actual);
-        console.log(vendido);
+
         acum = 0;
 
         displayProductsInTable();
@@ -171,8 +185,7 @@ function finalizar_compra() {
         vendido = localStorage.setItem('valor_compra_actual', '0.00');
         localStorage.removeItem('valor_compra_actual');
         vendido = 0;
-        console.log(compra_actual);
-        console.log(vendido);
+
         acum = 0;
         actualizarCompraActual();
     }
@@ -238,7 +251,6 @@ function actualizarCompraActual() {
     if (compra_actual === 'no') {
         console.log('No finalizo');
         vendido = localStorage.getItem('valor_compra_actual');
-        console.log(vendido);
         acum = parseFloat(acum) + parseFloat(vendido);
         localStorage.setItem('valor_compra_actual', JSON.stringify(acum));
         var vendidoActualElement = document.getElementById('vendido-actual');
@@ -248,7 +260,6 @@ function actualizarCompraActual() {
         vendido = 0;
         var vendidoActualElement = document.getElementById('vendido-actual');
         vendidoActualElement.textContent = 'Compra actual: $' + vendido.toFixed(2);
-        console.log(vendido);
         vendido = localStorage.setItem('valor_compra_actual', '0');
     }
 }
